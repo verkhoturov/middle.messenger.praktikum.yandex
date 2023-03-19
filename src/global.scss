@@ -1,3 +1,17 @@
+@import url("../static/styles/normalize.css");
+
+@font-face {
+	font-family: 'Videotype'; 
+	src: url("../static/fonts/videotype.ttf"); 
+}
+
 body {
+    margin: 0;
+    font-family: 'Videotype'; 
+	font-size: 20px;
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
 }

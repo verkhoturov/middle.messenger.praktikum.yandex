@@ -1,0 +1,23 @@
+.button {
+    height: 40px;
+    width: fit-content;
+    
+    padding: 0 12px;
+
+    color: black;
+
+    cursor: pointer;
+
+    background: unset;
+    border: 2px solid black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    &:hover {
+        background-color: #d4d4ff;
+    }
+}

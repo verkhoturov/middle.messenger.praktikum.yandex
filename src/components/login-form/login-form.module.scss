@@ -1,0 +1,19 @@
+.form {
+    padding: 20px;
+    margin: 40px auto;
+
+    max-width: 340px;
+
+    border: 2px solid black;
+    box-shadow: 8px 8px 0px rgb(0 0 0);
+}
+
+.label {
+    margin-bottom: 12px;
+    display: block;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
