@@ -1,7 +1,7 @@
 import { RegForm }  from "../../components/reg-form"; 
 
 export const RegPage = `
-<div>
+<main>
     ${RegForm()}
-</div>
+</main>
 `;
