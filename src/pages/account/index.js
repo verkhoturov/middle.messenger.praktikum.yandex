@@ -1,7 +1,7 @@
 import { SettingsForm }  from "../../components/settings-form"; 
 
 export const AccountPage = `
-<div>
+<main>
     ${SettingsForm()}
-</div>
+</main>
 `;
