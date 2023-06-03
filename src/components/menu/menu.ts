@@ -1,7 +1,6 @@
-import { Input }  from "../input";
 import { Button } from "../button";
 
-import * as styles from "./menu.module.scss";
+import styles from "./menu.module.scss";
 
 export const Menu = () => `
 <div class="${styles.menu}">

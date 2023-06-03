@@ -1,7 +1,7 @@
 import { Input }  from "../input";
 import { Button } from "../button";
 
-import * as styles from "./chats-form.module.scss";
+import styles from "./chats-form.module.scss";
 
 export const ChatsForm = () => `
 <div class="${styles.chatsWrapper}">

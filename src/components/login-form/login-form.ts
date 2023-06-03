@@ -1,7 +1,7 @@
 import { Input }  from "../input";
 import { Button } from "../button";
 
-import * as styles from "./login-form.module.scss";
+import styles from "./login-form.module.scss";
 
 export const LoginForm = () => `
 <form class="${styles.form}">

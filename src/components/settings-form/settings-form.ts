@@ -1,11 +1,16 @@
 import { Input }  from "../input";
 import { Button } from "../button";
 
-import * as styles from "./settings-form.module.scss";
+import styles from "./settings-form.module.scss";
 
 export const SettingsForm = () => `
 <form class="${styles.form}">
     <h3 class="${styles.title}">Settings</h3>
+
+    <label class="${styles.label}">
+        ${Input({placeholder: "Chan nickname", name: "display_name"})}
+    </label>
+
     <label class="${styles.label}">
         ${Input({placeholder: "Name", name: "first_name"})}
     </label>

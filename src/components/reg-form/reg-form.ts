@@ -1,7 +1,7 @@
 import { Input }  from "../input";
 import { Button } from "../button";
 
-import * as styles from "./reg-form.module.scss";
+import styles from "./reg-form.module.scss";
 
 export const RegForm = () => `
 <form class="${styles.form}">
