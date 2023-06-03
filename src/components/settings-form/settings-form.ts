@@ -1,4 +1,4 @@
-import { Input }  from "../input";
+import { Input } from "../input";
 import { Button } from "../button";
 
 import styles from "./settings-form.module.scss";
@@ -8,46 +8,54 @@ export const SettingsForm = () => `
     <h3 class="${styles.title}">Settings</h3>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Chan nickname", name: "display_name"})}
+        ${Input({ placeholder: "Chat nickname", name: "display_name" })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Name", name: "first_name"})}
+        ${Input({ placeholder: "Name", name: "first_name" })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Second name", name: "second_name"})}
+        ${Input({ placeholder: "Second name", name: "second_name" })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Login", name: "login"})}
+        ${Input({ placeholder: "Login", name: "login" })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Email", name: "email", type: "email"})}
+        ${Input({ placeholder: "Email", name: "email", type: "email" })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "Phone", name: "phone", type: "tel"})}
+        ${Input({ placeholder: "Phone", name: "phone", type: "tel" })}
     </label>
 
     <label class="${styles.label}">
         <p  class="${styles.desc}">Avatar</p>
-        ${Input({ name: "avatar", type: "file"})}
+        ${Input({ name: "avatar", type: "file" })}
     </label>
 
     <label class="${styles.label}">
         <p  class="${styles.desc}">Change password</p>
-        ${Input({placeholder: "Old password", name: "oldPassword", type: "password"})}
+        ${Input({
+          placeholder: "Old password",
+          name: "oldPassword",
+          type: "password",
+        })}
     </label>
 
     <label class="${styles.label}">
-        ${Input({placeholder: "New password", name: "newPassword", type: "password"})}
+        ${Input({
+          placeholder: "New password",
+          name: "newPassword",
+          type: "password",
+        })}
     </label>
     
     <div class="${styles.row}">
-        ${Button({text: "Save", to: "/chats"})}
-        ${Button({text: "Back", to: "/chats"})}
+        ${Button({ text: "Save", to: "/chats" })}
+        ${Button({ text: "Back", to: "/chats" })}
     </div>
 </form>
 `;
