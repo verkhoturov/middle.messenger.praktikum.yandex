@@ -29,7 +29,7 @@ export default function compile(
     }
   });
 
-  fragment.innerHTML = tmpl(props);
+  fragment.textContent = tmpl(props);
 
   Object.entries(components).forEach(([id, component]) => {
     const stub = fragment.content.querySelector(`#id-${id}`);

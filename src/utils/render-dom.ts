@@ -7,7 +7,7 @@ export function renderDOM(query: string, block: Block) {
     throw new Error("Root element not found");
   }
 
-  root.innerHTML = "";
+  root.textContent = "";
   block.element.removeAttribute("style");
   root.appendChild(block.getContent());
 
