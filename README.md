@@ -20,7 +20,7 @@
 
 ## Netlify
 
-[Ссылка на Хостинг](https://6417628b9d0f4303678a6855--vermillion-madeleine-c04d95.netlify.app/)
+[Ссылка на Хостинг](https://vermillion-madeleine-c04d95.netlify.app/)
 
 ## Макеты
 
