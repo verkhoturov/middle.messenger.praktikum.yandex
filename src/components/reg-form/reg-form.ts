@@ -1,45 +1,146 @@
-import { Input } from "../input";
-import { Button } from "../button";
-
+import tmpl from "./reg-form.hbs";
 import styles from "./reg-form.module.scss";
 
-export const RegForm = () => `
-<form class="${styles.form}">
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Name", name: "first_name" })}
-    </label>
+import { Button } from "../button";
+import { Input } from "../input";
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Second name", name: "second_name" })}
-    </label>
+import Block from "../../utils/block";
+import compile from "../../utils/compile";
+import { isValid } from "../../utils/validator";
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Login", name: "login" })}
-    </label>
+interface RegFormProps {}
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Email", name: "email", type: "email" })}
-    </label>
+export class RegForm extends Block {
+  constructor(props: RegFormProps) {
+    super("div", props);
+  }
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Phone", name: "phone", type: "tel" })}
-    </label>
+  onFocus(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!isValid(element)) {
+      element.style.borderColor = "red";
+    } else {
+      element.style.borderColor = "black";
+    }
+  }
 
-    <label class="${styles.label}">
-        ${Input({
-          placeholder: "Password",
-          name: "password",
-          type: "password",
-        })}
-    </label>
-    
-    <div class="${styles.label}">
-        ${Button({ text: "Sign up", to: "/chats" })}
-    </div>
-    
-    <div class="${styles.row}">
-        <p>Already have an account?</p>
-        ${Button({ text: "Login", to: "/login" })}
-    </div>
-</form>
-`;
+  render() {
+    const NameInput = new Input({
+      name: "first_name",
+      placeholder: "First name",
+      validationType: "name",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const SecondNameInput = new Input({
+      name: "second_name",
+      placeholder: "Second name",
+      validationType: "name",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const LoginInput = new Input({
+      name: "login",
+      placeholder: "Login",
+      validationType: "login",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const EmailInput = new Input({
+      name: "email",
+      type: "email",
+      placeholder: "Email",
+      validationType: "email",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const PhoneInput = new Input({
+      name: "phone",
+      placeholder: "Phone",
+      type: "tel",
+      validationType: "phone",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const PasswordInput = new Input({
+      name: "password",
+      placeholder: "Password",
+      type: "password",
+      validationType: "password",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
+    const SignUpButton = new Button({
+      text: "Sign up",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+
+          const inputs = [
+            NameInput,
+            SecondNameInput,
+            LoginInput,
+            EmailInput,
+            PhoneInput,
+            PasswordInput,
+          ];
+
+          const formData: { [index: string]: any } = {};
+          let isFormValid = true;
+          inputs.map((input) => {
+            const el = input.element as HTMLInputElement;
+            if (!isValid(el)) {
+              isFormValid = false;
+              el.style.borderColor = "red";
+            } else {
+              const name = el.getAttribute("name");
+              const { value } = el;
+              if (name) {
+                formData[name] = value;
+              }
+            }
+          });
+          if (isFormValid) {
+            console.log(formData);
+            window.location.href = "/chats";
+          }
+        },
+      },
+    });
+
+    const LoginButton = new Button({
+      text: "Login",
+      to: "/login",
+    });
+
+    return compile(tmpl, {
+      styles,
+      NameInput,
+      SecondNameInput,
+      LoginInput,
+      EmailInput,
+      PhoneInput,
+      PasswordInput,
+      SignUpButton,
+      LoginButton,
+    });
+  }
+}

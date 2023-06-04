@@ -1,70 +1,148 @@
-import { Input } from "../input";
-import { Button } from "../button";
-
+import tmpl from "./settings-form.hbs";
 import styles from "./settings-form.module.scss";
 
-export const SettingsForm = () => `
-<form class="${styles.form}">
-    <h3 class="${styles.title}">Settings</h3>
+import { Button } from "../button";
+import { Input } from "../input";
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Chat nickname", name: "display_name" })}
-    </label>
+import Block from "../../utils/block";
+import compile from "../../utils/compile";
+import { isValid } from "../../utils/validator";
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Name", name: "first_name" })}
-    </label>
+interface SettingsFormProps {}
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Second name", name: "second_name" })}
-    </label>
+export class SettingsForm extends Block {
+  constructor(props: SettingsFormProps) {
+    super("div", props);
+  }
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Login", name: "login" })}
-    </label>
+  onFocus(event: Event) {
+    const element = event.target as HTMLInputElement;
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Email", name: "email", type: "email" })}
-    </label>
+    if (!isValid(element)) {
+      element.style.borderColor = "red";
+    } else {
+      element.style.borderColor = "black";
+    }
+  }
 
-    <label class="${styles.label}">
-        ${Input({ placeholder: "Phone", name: "phone", type: "tel" })}
-    </label>
+  render() {
+    const DisplayNameInput = new Input({
+      placeholder: "Chat nickname",
+      name: "display_name",
+    });
 
-    <label class="${styles.label}">
-        <p  class="${styles.desc}">Avatar</p>
-        ${Input({ name: "avatar", type: "file" })}
-    </label>
+    const FistNameInput = new Input({
+      placeholder: "Name",
+      name: "first_name",
+      validationType: "name",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
 
-    <label class="${styles.label}">
-        <p  class="${styles.desc}">Change password</p>
-        ${Input({
-          placeholder: "Old password",
-          name: "oldPassword",
-          type: "password",
-        })}
-    </label>
+    const SecondNameInput = new Input({
+      name: "second_name",
+      placeholder: "Second name",
+      validationType: "name",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
 
-    <label class="${styles.label}">
-        ${Input({
-          placeholder: "New password",
-          name: "newPassword",
-          type: "password",
-        })}
-    </label>
-    
-    <div class="${styles.row}">
-        ${Button({ text: "Save", to: "/chats" })}
-        ${Button({ text: "Back", to: "/chats" })}
-    </div>
-</form>
-`;
+    const LoginInput = new Input({
+      name: "login",
+      placeholder: "Login",
+      validationType: "login",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
 
-// first_name, second_name, display_name, login, email, phone
+    const EmailInput = new Input({
+      name: "email",
+      type: "email",
+      placeholder: "Email",
+      validationType: "email",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
 
-/*
+    const PhoneInput = new Input({
+      name: "phone",
+      placeholder: "Phone",
+      type: "tel",
+      validationType: "phone",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
 
-Поле для изменения аватара: avatar;
-Поля для изменения пароля: oldPassword, newPassword.
+    const AvatarInput = new Input({
+      name: "avatar",
+      placeholder: "Avatar",
+      type: "file",
+    });
 
-*/
+    const SaveButton = new Button({
+      text: "Save",
+      events: {
+        click: (e) => {
+          e.preventDefault();
+
+          const inputs = [
+            DisplayNameInput,
+            FistNameInput,
+            SecondNameInput,
+            LoginInput,
+            EmailInput,
+            PhoneInput,
+          ];
+
+          const formData: { [index: string]: any } = {};
+          let isFormValid = true;
+          inputs.map((input) => {
+            const el = input.element as HTMLInputElement;
+            if (!isValid(el)) {
+              isFormValid = false;
+              el.style.borderColor = "red";
+            } else {
+              const name = el.getAttribute("name");
+              const { value } = el;
+              if (name) {
+                formData[name] = value;
+              }
+            }
+          });
+          if (isFormValid) {
+            console.log(formData);
+            window.location.href = "/chats";
+          }
+        },
+      },
+    });
+
+    const BackButton = new Button({
+      text: "Back",
+      to: "/chats",
+    });
+
+    return compile(tmpl, {
+      styles,
+      DisplayNameInput,
+      FistNameInput,
+      SecondNameInput,
+      LoginInput,
+      EmailInput,
+      PhoneInput,
+      AvatarInput,
+      SaveButton,
+      BackButton,
+    });
+  }
+}

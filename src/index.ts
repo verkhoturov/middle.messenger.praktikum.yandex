@@ -1,22 +1,29 @@
 import {
-  LoginPage,
-  RegPage,
-  NotFoundPage,
   AccountPage,
   ChatsPage,
+  NotFoundPage,
+  LoginPage,
+  RegPage,
 } from "./pages";
 
-const getPageContent = (pathname: string) => {
-  if (pathname === "/" || pathname === "/login") return LoginPage;
-  if (pathname === "/sign-up") return RegPage;
-  if (pathname === "/account") return AccountPage;
-  if (pathname === "/chats") return ChatsPage;
-  return NotFoundPage;
+import { renderDOM } from "./utils/render-dom";
+
+const login = new LoginPage();
+const reg = new RegPage();
+const chats = new ChatsPage();
+const account = new AccountPage();
+const notFound = new NotFoundPage();
+
+const getPage = (pathname: string) => {
+  if (pathname === "/" || pathname === "/login") return login;
+  if (pathname === "/sign-up") return reg;
+  if (pathname === "/chats") return chats;
+  if (pathname === "/account") return account;
+
+  return notFound;
 };
 
 const pathname = window.location.pathname;
-const pageContent = getPageContent(pathname);
+const page = getPage(pathname);
 
-const root = document.querySelector("#root");
-if (!root) throw new Error("Root element not found");
-root.innerHTML = pageContent;
+renderDOM("#root", page);

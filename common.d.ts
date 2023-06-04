@@ -3,7 +3,7 @@ declare module '*.scss' {
     export default styles;
 }
 
-declare module 'bundle-text:*' {
-    const content: string;
-    export default content;
+declare module '*.hbs' {
+    const templateFunction: (param?: any) => string;
+    export default templateFunction;
 }

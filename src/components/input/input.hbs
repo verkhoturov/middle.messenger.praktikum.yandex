@@ -1,1 +1,7 @@
-<input type="{{type}}" name="{{name}}" placeholder="{{placeholder}}" {{#if className}}class="{{className}}"{{/if}} />
+<input 
+type="{{type}}" 
+name="{{name}}" 
+placeholder="{{placeholder}}" 
+{{#if className}}class="{{className}}"{{/if}} 
+{{#if validationType}}data-validation="{{ validationType }}" {{/if}} 
+/>

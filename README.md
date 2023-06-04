@@ -7,7 +7,8 @@
 
 - `npm install` — установка стабильной версии,
 - `npm run dev` — запуск версии для разработчика,
-- `npm run build` — сборка стабильной версии.
+- `npm run build` — сборка стабильной версии,
+- `npm run lint` — проверка кода на соответствие правилам,
 - `npm start` — сборка и запуск сервера
 
 ## Использованные инструменты и библиотеки
@@ -15,6 +16,7 @@
 * Код - `typescript`, `handlebars`, `scss`
 * Сборка - `parcel`
 * Сервер статики - `express`
+* Проверка кода - `ESlint`, `Stylelint`
 
 ## Netlify
 
@@ -31,4 +33,4 @@
 
 ## Pull Request
 
-[Ссылка для ревью - Sprint-1](https://github.com/verkhoturov/middle.messenger.praktikum.yandex/pull/1)
+[Ссылка для ревью - Sprint-2](https://github.com/verkhoturov/middle.messenger.praktikum.yandex/pull/6)
