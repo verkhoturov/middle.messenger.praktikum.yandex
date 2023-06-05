@@ -80,7 +80,7 @@ export class LoginForm extends Block {
 
     const RegisterButton = new Button({
       text: "Register",
-      to: "/sign-up",
+      to: "/sign-up.html",
     });
 
     return compile(tmpl, {
