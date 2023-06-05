@@ -12,28 +12,23 @@
   from ="/"
   to = "/index.htmI"
   status = 200
-  force = true
 
 [[redirects]]
   from ="/login"
   to = "/index.htmI"
   status = 200
-  force = true
 
 [[redirects]]
   from ="/sign-up"
   to = "/index.htmI"
   status = 200
-  force = true
 
 [[redirects]]
   from ="/chats"
   to = "/index.htmI"
   status = 200
-  force = true
 
 [[redirects]]
   from ="/account"
   to = "/index.htmI"
   status = 200
-  force = true
