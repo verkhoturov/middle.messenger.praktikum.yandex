@@ -20,7 +20,7 @@
 
 ## Netlify
 
-[Ссылка на Хостинг](https://vermillion-madeleine-c04d95.netlify.app/)
+[Ссылка на Хостинг](https://starlit-sorbet-a723ed.netlify.app)
 
 ## Макеты
 
