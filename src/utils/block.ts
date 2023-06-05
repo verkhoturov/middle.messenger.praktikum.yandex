@@ -6,7 +6,7 @@ export interface BlockDefaultProps {
   [key: string]: unknown;
 }
 
-export default class Block<T extends BlockDefaultProps = {}> {
+export default class Block<Props extends BlockDefaultProps = {}> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -18,13 +18,13 @@ export default class Block<T extends BlockDefaultProps = {}> {
 
   _meta: Record<string, unknown> = {};
 
-  props: T;
+  props: Props;
 
   _id = "";
 
   eventBus: () => EventBus;
 
-  constructor(tagName = "div", props: T) {
+  constructor(tagName = "div", props: Props) {
     const eventBus = new EventBus();
     this._meta = {
       tagName,
@@ -65,12 +65,12 @@ export default class Block<T extends BlockDefaultProps = {}> {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  _componentDidMount(props: T) {
+  _componentDidMount(props: Props) {
     this.componentDidMount(props);
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  componentDidMount(_props: T) {
+  componentDidMount(_props: Props) {
     return;
   }
 
@@ -78,7 +78,7 @@ export default class Block<T extends BlockDefaultProps = {}> {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate(oldProps: T, newProps: T) {
+  _componentDidUpdate(oldProps: Props, newProps: Props) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -87,11 +87,11 @@ export default class Block<T extends BlockDefaultProps = {}> {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidUpdate(_oldProps: T, _newProps: T) {
+  componentDidUpdate(_oldProps: Props, _newProps: Props) {
     return true;
   }
 
-  setProps = (nextProps: Partial<T>) => {
+  setProps = (nextProps: Partial<Props>) => {
     if (!nextProps) {
       return;
     }
@@ -151,7 +151,7 @@ export default class Block<T extends BlockDefaultProps = {}> {
     });
   }
 
-  _makePropsProxy(props: T) {
+  _makePropsProxy(props: Props) {
     const self = this;
 
     return new Proxy(props, {
@@ -161,7 +161,7 @@ export default class Block<T extends BlockDefaultProps = {}> {
       },
       set(target, prop: string, value) {
         if (target[prop] !== value || typeof value === "object") {
-          target[prop as keyof T] = value;
+          target[prop as keyof Props] = value;
 
           self.eventBus().emit(Block.EVENTS.FLOW_CDU);
         }
