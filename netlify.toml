@@ -9,6 +9,26 @@
   publish = "dist"
 
 [[redirects]]
-  from ="/*"
+  from ="/"
+  to = "/index.htmI"
+  status = 200
+
+[[redirects]]
+  from ="/login"
+  to = "/index.htmI"
+  status = 200
+
+[[redirects]]
+  from ="/sign-up"
+  to = "/index.htmI"
+  status = 200
+
+[[redirects]]
+  from ="/chats"
+  to = "/index.htmI"
+  status = 200
+
+[[redirects]]
+  from ="/account"
   to = "/index.htmI"
   status = 200
