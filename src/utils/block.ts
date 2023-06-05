@@ -1,7 +1,12 @@
 import { nanoid } from "nanoid";
 import EventBus from "./eventbus";
 
-export default class Block {
+export interface BlockDefaultProps {
+  className?: string;
+  [key: string]: unknown;
+}
+
+export default class Block<T extends BlockDefaultProps = {}> {
   static EVENTS = {
     INIT: "init",
     FLOW_CDM: "flow:component-did-mount",
@@ -13,13 +18,13 @@ export default class Block {
 
   _meta: Record<string, unknown> = {};
 
-  props: any;
+  props: T;
 
   _id = "";
 
   eventBus: () => EventBus;
 
-  constructor(tagName = "div", props: any) {
+  constructor(tagName = "div", props: T) {
     const eventBus = new EventBus();
     this._meta = {
       tagName,
@@ -60,13 +65,12 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  _componentDidMount(props: any) {
+  _componentDidMount(props: T) {
     this.componentDidMount(props);
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  // Может переопределять пользователь, необязательно трогать
-  componentDidMount(_props: any) {
+  componentDidMount(_props: T) {
     return;
   }
 
@@ -74,7 +78,7 @@ export default class Block {
     this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
-  _componentDidUpdate(oldProps: any, newProps: any) {
+  _componentDidUpdate(oldProps: T, newProps: T) {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -83,11 +87,11 @@ export default class Block {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  componentDidUpdate(_oldProps: any, _newProps: any) {
+  componentDidUpdate(_oldProps: T, _newProps: T) {
     return true;
   }
 
-  setProps = (nextProps: any) => {
+  setProps = (nextProps: Partial<T>) => {
     if (!nextProps) {
       return;
     }
@@ -147,7 +151,7 @@ export default class Block {
     });
   }
 
-  _makePropsProxy(props: any) {
+  _makePropsProxy(props: T) {
     const self = this;
 
     return new Proxy(props, {
@@ -157,7 +161,7 @@ export default class Block {
       },
       set(target, prop: string, value) {
         if (target[prop] !== value || typeof value === "object") {
-          target[prop] = value;
+          target[prop as keyof T] = value;
 
           self.eventBus().emit(Block.EVENTS.FLOW_CDU);
         }

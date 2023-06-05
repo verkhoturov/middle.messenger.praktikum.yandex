@@ -1,11 +1,10 @@
 import tmpl from "./input.hbs";
 import styles from "./input.module.scss";
-import Block from "../../utils/block";
+import Block, { BlockDefaultProps } from "../../utils/block";
 import compile from "../../utils/compile";
 
-interface InputProps {
+interface InputProps extends BlockDefaultProps {
   type?: "text" | "password" | "email" | "tel" | "file";
-  className?: string;
   validationType?: string;
   name: string;
   placeholder?: string;
@@ -15,7 +14,7 @@ interface InputProps {
   };
 }
 
-export class Input extends Block {
+export class Input extends Block<InputProps> {
   constructor(props: InputProps) {
     super("input", props);
     this.props.className = `${styles.input} ${props.className || ""}`;
