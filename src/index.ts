@@ -15,7 +15,12 @@ const account = new AccountPage();
 const notFound = new NotFoundPage();
 
 const getPage = (pathname: string) => {
-  if (pathname === "/" || pathname === "/login" || pathname === "/index.html")
+  if (
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/login.html" ||
+    pathname === "/index.html"
+  )
     return login;
   if (pathname === "/sign-up" || pathname === "/sign-up.html") return reg;
   if (pathname === "/chats" || pathname === "/chats.html") return chats;
