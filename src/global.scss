@@ -1,13 +1,13 @@
-@import url("../static/styles/normalize.css");
+@import "../static/styles/normalize.css";
 
 @font-face {
-	font-family: 'Videotype'; 
+	font-family: Videotype; 
 	src: url("../static/fonts/videotype.ttf"); 
 }
 
 body {
     margin: 0;
-    font-family: 'Videotype'; 
+    font-family: Videotype, sans-serif;  
 	font-size: 20px;
 }
 
