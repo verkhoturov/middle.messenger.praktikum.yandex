@@ -22,6 +22,7 @@ const getPage = (pathname: string) => {
     pathname === "/index.html"
   )
     return login;
+
   if (pathname === "/sign-up" || pathname === "/sign-up.html") return reg;
   if (pathname === "/chats" || pathname === "/chats.html") return chats;
   if (pathname === "/account" || pathname === "/account.html") return account;

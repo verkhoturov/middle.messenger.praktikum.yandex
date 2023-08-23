@@ -14,7 +14,7 @@
 ## Использованные инструменты и библиотеки
 
 * Код - `typescript`, `handlebars`, `scss`
-* Сборка - `parcel`
+* Сборка - `Vite`
 * Сервер статики - `express`
 * Проверка кода - `ESlint`, `Stylelint`
 
