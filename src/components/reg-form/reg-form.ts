@@ -7,6 +7,7 @@ import { Input } from "../input";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
+import Router from "../../utils/router";
 
 interface RegFormProps {}
 
@@ -120,7 +121,7 @@ export class RegForm extends Block {
           });
           if (isFormValid) {
             console.log(formData);
-            window.location.href = "/chats";
+            Router.go("/chats");
           }
         },
       },
@@ -128,7 +129,11 @@ export class RegForm extends Block {
 
     const LoginButton = new Button({
       text: "Login",
-      to: "/login",
+      events: {
+        click: () => {
+          Router.go("/login");
+        }
+      }
     });
 
     return compile(tmpl, {

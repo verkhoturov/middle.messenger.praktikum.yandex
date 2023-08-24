@@ -7,6 +7,7 @@ import { Input } from "../input";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
+import Router from "../../utils/router";
 
 interface SettingsFormProps {}
 
@@ -121,7 +122,7 @@ export class SettingsForm extends Block {
           });
           if (isFormValid) {
             console.log(formData);
-            window.location.href = "/chats";
+            Router.go("/chats");
           }
         },
       },
@@ -129,7 +130,11 @@ export class SettingsForm extends Block {
 
     const BackButton = new Button({
       text: "Back",
-      to: "/chats",
+      events: {
+        click: () => {
+          Router.go("/chats");
+        }
+      }
     });
 
     return compile(tmpl, {

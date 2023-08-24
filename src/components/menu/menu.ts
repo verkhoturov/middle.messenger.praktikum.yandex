@@ -5,6 +5,7 @@ import { Button } from "../button";
 
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
+import Router from "../../utils/router";
 
 interface MenuProps {}
 
@@ -17,12 +18,20 @@ export class Menu extends Block {
 
     const settingsButton = new Button({
       text: "Settings",
-      to: "/account",
+      events: {
+        click: () => {
+          Router.go("/account");
+        }
+      }
     });
 
     const exitButton = new Button({
       text: "Exit",
-      to: "/login",
+      events: {
+        click: () => {
+          Router.go("/login");
+        }
+      }
     });
 
     return compile(tmpl, {

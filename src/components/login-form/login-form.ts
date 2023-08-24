@@ -7,6 +7,7 @@ import { Input } from "../input";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
+import Router from "../../utils/router";
 
 interface LoginFormProps {}
 
@@ -71,8 +72,7 @@ export class LoginForm extends Block {
             }
           });
           if (isFormValid) {
-            console.log(formData);
-            window.location.href = "/chats";
+            Router.go("/chats");
           }
         },
       },
@@ -80,7 +80,11 @@ export class LoginForm extends Block {
 
     const RegisterButton = new Button({
       text: "Register",
-      to: "/sign-up",
+      events: {
+        click: () => {
+          Router.go("/sign-up");
+        }
+      }
     });
 
     return compile(tmpl, {
