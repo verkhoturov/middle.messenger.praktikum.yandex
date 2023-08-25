@@ -5,6 +5,7 @@ import compile from "../../utils/compile";
 
 interface InputProps extends BlockDefaultProps {
   type?: "text" | "password" | "email" | "tel" | "file";
+  value?: string;
   validationType?: string;
   name: string;
   placeholder?: string;
@@ -20,6 +21,7 @@ export class Input extends Block<InputProps> {
     this.props.className = `${styles.input} ${props.className || ""}`;
     this.props.type = props.type || "text";
     this.props.placeholder = props.placeholder || "";
+    this.props.value = props.value || "";
   }
 
   render() {

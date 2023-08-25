@@ -9,6 +9,8 @@ import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
 import Router from "../../utils/router";
 
+import AuthApi from "../../api/auth";
+
 interface RegFormProps {}
 
 export class RegForm extends Block {
@@ -92,7 +94,7 @@ export class RegForm extends Block {
     const SignUpButton = new Button({
       text: "Sign up",
       events: {
-        click: (e) => {
+        click: async (e) => {
           e.preventDefault();
 
           const inputs = [
@@ -105,7 +107,9 @@ export class RegForm extends Block {
           ];
 
           const formData: { [index: string]: any } = {};
+
           let isFormValid = true;
+
           inputs.map((input) => {
             const el = input.element as HTMLInputElement;
             if (!isValid(el)) {
@@ -120,8 +124,12 @@ export class RegForm extends Block {
             }
           });
           if (isFormValid) {
-            console.log(formData);
-            Router.go("/chats");
+            const auth = new AuthApi();
+            const res = await auth.singUp(formData);
+
+            if (res?.status === "success") {
+              Router.go("/chats");
+            }
           }
         },
       },
@@ -132,8 +140,8 @@ export class RegForm extends Block {
       events: {
         click: () => {
           Router.go("/login");
-        }
-      }
+        },
+      },
     });
 
     return compile(tmpl, {

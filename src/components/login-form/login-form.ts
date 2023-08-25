@@ -53,15 +53,18 @@ export class LoginForm extends Block {
     const EnterButton = new Button({
       text: "Enter",
       events: {
-        click: (e) => {
+        click: async (e) => {
           e.preventDefault();
 
           const inputs = [LoginInput, PasswordInput];
 
           const formData: { [index: string]: any } = {};
+
           let isFormValid = true;
+
           inputs.map((input) => {
             const el = input.element as HTMLInputElement;
+
             if (!isValid(el)) {
               isFormValid = false;
               el.style.borderColor = "red";
@@ -73,14 +76,25 @@ export class LoginForm extends Block {
               }
             }
           });
+
           if (isFormValid) {
             const auth = new AuthApi();
-            auth.singIn({
+
+            const res = await auth.singIn({
               login: formData.login,
               password: formData.password,
             });
 
-            // Router.go("/chats");
+            if (res?.status === "error") {
+              inputs.map((input) => {
+                const el = input.element as HTMLInputElement;
+                el.style.borderColor = "red";
+              });
+            }
+
+            if (res?.status === "success") {
+              Router.go("/chats");
+            }
           }
         },
       },

@@ -1,15 +1,7 @@
 import HTTPTransport from "../utils/HTTPTransport";
+import { User } from "../utils/types";
 
 const PRAKTIKUM_API_URL = "https://ya-praktikum.tech/api/v2";
-
-interface User {
-  first_name?: string;
-  second_name?: string;
-  login?: string;
-  email?: string;
-  password?: string;
-  phone?: string;
-}
 
 class AuthAPI {
   http: HTTPTransport;
@@ -18,30 +10,71 @@ class AuthAPI {
     this.http = new HTTPTransport();
   }
 
+  async singUp(data: User) {
+    try {
+      const res = await this.http.post(PRAKTIKUM_API_URL + "/auth/signup", {
+        data
+      });
+
+      return {
+        status: "success",
+        message: res
+      };
+    } catch (error) {
+      console.error(error);
+
+      return {
+        status: "error",
+        message: error?.reason ?? error?.message ?? error ?? "Unknown error"
+      };
+    }
+  }
+
   async singIn(data: User) {
     try {
-      const res = await this.http.post(PRAKTIKUM_API_URL + "/auth/signin", { data });
-      
-      console.log("res", res);
-      
+      const res = await this.http.post(PRAKTIKUM_API_URL + "/auth/signin", {
+        data
+      });
+
+      return {
+        status: "success",
+        message: res
+      };
+    } catch (error) {
+      console.error(error);
+
+      return {
+        status: "error",
+        message: error?.reason ?? error?.message ?? error ?? "Unknown error"
+      };
+    }
+  }
+
+  async getUser() {
+    try {
+      const user = await this.http.get(PRAKTIKUM_API_URL + "/auth/user");
+
+      return {
+        status: "success",
+        user: typeof user === "string" ? JSON.parse(user) : user
+      };
     } catch (error) {
       console.log(error);
     }
   }
 
-  /*
-  singUp(data: User) {
-    return this.http.post(URL + "/auth/signup", { data });
-  }
+  async logout() {
+    try {
+      const res = await this.http.post(PRAKTIKUM_API_URL + "/auth/logout");
 
-  getUser() {
-    return this.http.get(URL + "/auth/user");
+      return {
+        status: "success",
+        message: res
+      };
+    } catch (error) {
+      console.error(error);
+    }
   }
-
-  logout() {
-    return this.http.post(URL + "/auth/logout");
-  }
-  */
 }
 
 export default AuthAPI;

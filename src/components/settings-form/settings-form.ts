@@ -9,11 +9,17 @@ import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
 import Router from "../../utils/router";
 
+// import AuthApi from "../../api/auth";
+import { User } from "../../utils/types";
+
 interface SettingsFormProps {}
 
 export class SettingsForm extends Block {
+  // private user: User | null = null;
+
   constructor(props: SettingsFormProps) {
     super("div", props);
+    // this.user = null;
   }
 
   onFocus(event: Event) {
@@ -26,16 +32,48 @@ export class SettingsForm extends Block {
     }
   }
 
+  /*
+  componentDidMount() {
+    const getUser = async () => {
+      const auth = new AuthApi();
+      const data = await auth.getUser();
+
+      this.user = data?.user;
+
+    };
+
+    getUser();
+  }
+  */
+
   render() {
+    const userFromLocalData = localStorage.getItem("ya-messenger-user");
+
+    if (!userFromLocalData) return null;
+
+    const user: User = JSON.parse(userFromLocalData);
+
+    const {
+      display_name,
+      first_name,
+      second_name,
+      login,
+      email,
+      phone,
+      // avatar,
+    } = user;
+
     const DisplayNameInput = new Input({
       placeholder: "Chat nickname",
       name: "display_name",
+      value: display_name,
     });
 
     const FistNameInput = new Input({
       placeholder: "Name",
       name: "first_name",
       validationType: "name",
+      value: first_name,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -46,6 +84,7 @@ export class SettingsForm extends Block {
       name: "second_name",
       placeholder: "Second name",
       validationType: "name",
+      value: second_name,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -56,6 +95,7 @@ export class SettingsForm extends Block {
       name: "login",
       placeholder: "Login",
       validationType: "login",
+      value: login,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -67,6 +107,7 @@ export class SettingsForm extends Block {
       type: "email",
       placeholder: "Email",
       validationType: "email",
+      value: email,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -78,6 +119,7 @@ export class SettingsForm extends Block {
       placeholder: "Phone",
       type: "tel",
       validationType: "phone",
+      value: phone,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -133,8 +175,8 @@ export class SettingsForm extends Block {
       events: {
         click: () => {
           Router.go("/chats");
-        }
-      }
+        },
+      },
     });
 
     return compile(tmpl, {

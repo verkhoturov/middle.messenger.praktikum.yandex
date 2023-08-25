@@ -10,7 +10,7 @@ type Options = {
   data?: any;
 };
 
-type HTTPMethod = (url: string, options?: Options) => Promise<XMLHttpRequest>;
+type HTTPMethod = (url: string, options?: Options) => Promise<XMLHttpRequest | string>;
 
 function queryStringify(data: Record<string, any>) {
   return Object.entries(data)
@@ -56,9 +56,9 @@ export default class HTTPTransport {
       xhr.onload = function () {
         const { status, response } = xhr;
         if (status === 200 || status === 201) {
-          return resolve(JSON.parse(response));
+          return resolve(response);
         }
-        return reject(JSON.parse(response));
+        return reject(response);
       };
 
       xhr.onabort = reject;
