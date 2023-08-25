@@ -6,7 +6,7 @@ enum Method {
 }
 
 type Options = {
-  method: Method;
+  method?: Method;
   data?: any;
 };
 
@@ -26,14 +26,26 @@ export default class HTTPTransport {
     return this.request(url, { ...options, method: Method.GET });
   };
 
-  post: HTTPMethod = (url, options) => this.request(url, options);
+  post: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.POST
+    });
 
-  put: HTTPMethod = (url, options) => this.request(url, options);
+  put: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.PUT
+    });
 
-  delete: HTTPMethod = (url, options) => this.request(url, options);
+  delete: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.DELETE
+    });
 
   request: HTTPMethod = (url, options = { method: Method.GET }) => {
-    const { method, data } = options;
+    const { method = Method.GET, data } = options;
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -55,8 +67,11 @@ export default class HTTPTransport {
 
       if (method === Method.GET || !data) {
         xhr.send();
-      } else {
+      } else if (data instanceof FormData) {
         xhr.send(data);
+      } else {
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
       }
     });
   };

@@ -9,6 +9,8 @@ import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
 import Router from "../../utils/router";
 
+import AuthApi from "../../api/auth";
+
 interface LoginFormProps {}
 
 export class LoginForm extends Block {
@@ -72,7 +74,13 @@ export class LoginForm extends Block {
             }
           });
           if (isFormValid) {
-            Router.go("/chats");
+            const auth = new AuthApi();
+            auth.singIn({
+              login: formData.login,
+              password: formData.password,
+            });
+
+            // Router.go("/chats");
           }
         },
       },
@@ -83,8 +91,8 @@ export class LoginForm extends Block {
       events: {
         click: () => {
           Router.go("/sign-up");
-        }
-      }
+        },
+      },
     });
 
     return compile(tmpl, {
