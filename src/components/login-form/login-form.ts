@@ -8,6 +8,7 @@ import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
 import Router from "../../utils/router";
+import { LocalStorageItem } from "../../utils/types";
 
 import AuthApi from "../../api/auth";
 
@@ -93,7 +94,15 @@ export class LoginForm extends Block {
             }
 
             if (res?.status === "success") {
-              Router.go("/chats");
+              const userRes = await auth.getUser();
+
+              if (userRes?.status === "success") {
+                localStorage.setItem(
+                  LocalStorageItem.USER,
+                  JSON.stringify(userRes.user)
+                );
+                Router.go("/chats");
+              }
             }
           }
         },

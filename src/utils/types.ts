@@ -8,3 +8,7 @@ export interface User {
   phone?: string;
   avatar?: string;
 }
+
+export enum LocalStorageItem {
+  USER = "ya-messenger-user"
+}

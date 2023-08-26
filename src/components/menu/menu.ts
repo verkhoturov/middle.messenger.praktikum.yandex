@@ -6,6 +6,7 @@ import { Button } from "../button";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import Router from "../../utils/router";
+import { LocalStorageItem } from "../../utils/types";
 
 import AuthApi from "../../api/auth";
 
@@ -34,6 +35,7 @@ export class Menu extends Block {
           const res = await auth.logout();
 
           if (res?.status === "success") {
+            localStorage.removeItem(LocalStorageItem.USER);
             Router.go("/login");
           }
         },

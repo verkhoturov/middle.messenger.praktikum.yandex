@@ -9,8 +9,8 @@ import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
 import Router from "../../utils/router";
 
-// import AuthApi from "../../api/auth";
-import { User } from "../../utils/types";
+import UserApi from "../../api/user";
+import { User, LocalStorageItem } from "../../utils/types";
 
 interface SettingsFormProps {}
 
@@ -47,7 +47,7 @@ export class SettingsForm extends Block {
   */
 
   render() {
-    const userFromLocalData = localStorage.getItem("ya-messenger-user");
+    const userFromLocalData = localStorage.getItem(LocalStorageItem.USER);
 
     if (!userFromLocalData) return null;
 
@@ -132,10 +132,27 @@ export class SettingsForm extends Block {
       type: "file",
     });
 
+    const OldPasswordInput = new Input({
+      name: "oldPassword",
+      placeholder: "Old password",
+      type: "password",
+    });
+
+    const NewPasswordInput = new Input({
+      name: "newPassword",
+      placeholder: "New password",
+      type: "password",
+      validationType: "password",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
     const SaveButton = new Button({
       text: "Save",
       events: {
-        click: (e) => {
+        click: async (e) => {
           e.preventDefault();
 
           const inputs = [
@@ -145,10 +162,13 @@ export class SettingsForm extends Block {
             LoginInput,
             EmailInput,
             PhoneInput,
+            // AvatarInput,
           ];
 
           const formData: { [index: string]: any } = {};
+
           let isFormValid = true;
+
           inputs.map((input) => {
             const el = input.element as HTMLInputElement;
             if (!isValid(el)) {
@@ -162,9 +182,46 @@ export class SettingsForm extends Block {
               }
             }
           });
+
+          // const avatar = AvatarInput.element as HTMLInputElement;
+
+          const oldPassword = OldPasswordInput.element as HTMLInputElement;
+          const newPassword = NewPasswordInput.element as HTMLInputElement;
+
+          if (!isValid(oldPassword)) {
+            isFormValid = false;
+            oldPassword.style.borderColor = "red";
+          }
+
           if (isFormValid) {
-            console.log(formData);
-            Router.go("/chats");
+            const user = new UserApi();
+
+            const updateProfileRes = await user.updateProfile(formData);
+
+            if (newPassword.value && oldPassword.value) {
+              const updatePasswordRes = await user.updatePassword({
+                oldPassword: oldPassword.value,
+                newPassword: newPassword.value,
+              });
+
+              if (updatePasswordRes.status !== "success") {
+                oldPassword.style.borderColor = "red";
+                return;
+              }
+
+              oldPassword.value = "";
+              newPassword.value = "";
+            }
+
+            /*
+            if(avatar.files && avatar.files[0]) {
+
+            }
+            */
+
+            if (updateProfileRes.status === "success") {
+              Router.go("/chats");
+            }
           }
         },
       },
@@ -188,6 +245,8 @@ export class SettingsForm extends Block {
       EmailInput,
       PhoneInput,
       AvatarInput,
+      OldPasswordInput,
+      NewPasswordInput,
       SaveButton,
       BackButton,
     });

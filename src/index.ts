@@ -8,6 +8,7 @@ import {
 
 import Router from "./utils/router";
 import AuthApi from "./api/auth";
+import { LocalStorageItem } from "./utils/types";
 
 const login = new LoginPage();
 const reg = new RegPage();
@@ -20,7 +21,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   const res = await auth.getUser();
 
   if (res?.user) {
-    localStorage.setItem("ya-messenger-user", JSON.stringify(res.user));
+    localStorage.setItem(LocalStorageItem.USER, JSON.stringify(res.user));
   }
 
   Router.use("/", login)
