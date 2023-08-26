@@ -7,12 +7,19 @@ import { Input } from "../input";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
+import Router from "../../utils/router";
+
+import UserApi from "../../api/user";
+import { User, LocalStorageItem } from "../../utils/types";
 
 interface SettingsFormProps {}
 
 export class SettingsForm extends Block {
+  // private user: User | null = null;
+
   constructor(props: SettingsFormProps) {
     super("div", props);
+    // this.user = null;
   }
 
   onFocus(event: Event) {
@@ -25,16 +32,48 @@ export class SettingsForm extends Block {
     }
   }
 
+  /*
+  componentDidMount() {
+    const getUser = async () => {
+      const auth = new AuthApi();
+      const data = await auth.getUser();
+
+      this.user = data?.user;
+
+    };
+
+    getUser();
+  }
+  */
+
   render() {
+    const userFromLocalData = localStorage.getItem(LocalStorageItem.USER);
+
+    if (!userFromLocalData) return null;
+
+    const user: User = JSON.parse(userFromLocalData);
+
+    const {
+      display_name,
+      first_name,
+      second_name,
+      login,
+      email,
+      phone,
+      // avatar,
+    } = user;
+
     const DisplayNameInput = new Input({
       placeholder: "Chat nickname",
       name: "display_name",
+      value: display_name,
     });
 
     const FistNameInput = new Input({
       placeholder: "Name",
       name: "first_name",
       validationType: "name",
+      value: first_name,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -45,6 +84,7 @@ export class SettingsForm extends Block {
       name: "second_name",
       placeholder: "Second name",
       validationType: "name",
+      value: second_name,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -55,6 +95,7 @@ export class SettingsForm extends Block {
       name: "login",
       placeholder: "Login",
       validationType: "login",
+      value: login,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -66,6 +107,7 @@ export class SettingsForm extends Block {
       type: "email",
       placeholder: "Email",
       validationType: "email",
+      value: email,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -77,6 +119,7 @@ export class SettingsForm extends Block {
       placeholder: "Phone",
       type: "tel",
       validationType: "phone",
+      value: phone,
       events: {
         blur: this.onFocus.bind(this),
         focus: this.onFocus.bind(this),
@@ -89,10 +132,27 @@ export class SettingsForm extends Block {
       type: "file",
     });
 
+    const OldPasswordInput = new Input({
+      name: "oldPassword",
+      placeholder: "Old password",
+      type: "password",
+    });
+
+    const NewPasswordInput = new Input({
+      name: "newPassword",
+      placeholder: "New password",
+      type: "password",
+      validationType: "password",
+      events: {
+        blur: this.onFocus.bind(this),
+        focus: this.onFocus.bind(this),
+      },
+    });
+
     const SaveButton = new Button({
       text: "Save",
       events: {
-        click: (e) => {
+        click: async (e) => {
           e.preventDefault();
 
           const inputs = [
@@ -102,10 +162,13 @@ export class SettingsForm extends Block {
             LoginInput,
             EmailInput,
             PhoneInput,
+            // AvatarInput,
           ];
 
           const formData: { [index: string]: any } = {};
+
           let isFormValid = true;
+
           inputs.map((input) => {
             const el = input.element as HTMLInputElement;
             if (!isValid(el)) {
@@ -119,9 +182,46 @@ export class SettingsForm extends Block {
               }
             }
           });
+
+          // const avatar = AvatarInput.element as HTMLInputElement;
+
+          const oldPassword = OldPasswordInput.element as HTMLInputElement;
+          const newPassword = NewPasswordInput.element as HTMLInputElement;
+
+          if (!isValid(oldPassword)) {
+            isFormValid = false;
+            oldPassword.style.borderColor = "red";
+          }
+
           if (isFormValid) {
-            console.log(formData);
-            window.location.href = "/chats";
+            const user = new UserApi();
+
+            const updateProfileRes = await user.updateProfile(formData);
+
+            if (newPassword.value && oldPassword.value) {
+              const updatePasswordRes = await user.updatePassword({
+                oldPassword: oldPassword.value,
+                newPassword: newPassword.value,
+              });
+
+              if (updatePasswordRes.status !== "success") {
+                oldPassword.style.borderColor = "red";
+                return;
+              }
+
+              oldPassword.value = "";
+              newPassword.value = "";
+            }
+
+            /*
+            if(avatar.files && avatar.files[0]) {
+
+            }
+            */
+
+            if (updateProfileRes.status === "success") {
+              Router.go("/chats");
+            }
           }
         },
       },
@@ -129,7 +229,11 @@ export class SettingsForm extends Block {
 
     const BackButton = new Button({
       text: "Back",
-      to: "/chats",
+      events: {
+        click: () => {
+          Router.go("/chats");
+        },
+      },
     });
 
     return compile(tmpl, {
@@ -141,6 +245,8 @@ export class SettingsForm extends Block {
       EmailInput,
       PhoneInput,
       AvatarInput,
+      OldPasswordInput,
+      NewPasswordInput,
       SaveButton,
       BackButton,
     });

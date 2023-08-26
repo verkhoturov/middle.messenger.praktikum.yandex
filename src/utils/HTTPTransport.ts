@@ -6,11 +6,11 @@ enum Method {
 }
 
 type Options = {
-  method: Method;
+  method?: Method;
   data?: any;
 };
 
-type HTTPMethod = (url: string, options?: Options) => Promise<XMLHttpRequest>;
+type HTTPMethod = (url: string, options?: Options) => Promise<XMLHttpRequest | string>;
 
 function queryStringify(data: Record<string, any>) {
   return Object.entries(data)
@@ -26,14 +26,26 @@ export default class HTTPTransport {
     return this.request(url, { ...options, method: Method.GET });
   };
 
-  post: HTTPMethod = (url, options) => this.request(url, options);
+  post: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.POST
+    });
 
-  put: HTTPMethod = (url, options) => this.request(url, options);
+  put: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.PUT
+    });
 
-  delete: HTTPMethod = (url, options) => this.request(url, options);
+  delete: HTTPMethod = (url, options) =>
+    this.request(url, {
+      ...options,
+      method: Method.DELETE
+    });
 
   request: HTTPMethod = (url, options = { method: Method.GET }) => {
-    const { method, data } = options;
+    const { method = Method.GET, data } = options;
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -44,9 +56,9 @@ export default class HTTPTransport {
       xhr.onload = function () {
         const { status, response } = xhr;
         if (status === 200 || status === 201) {
-          return resolve(JSON.parse(response));
+          return resolve(response);
         }
-        return reject(JSON.parse(response));
+        return reject(response);
       };
 
       xhr.onabort = reject;
@@ -55,8 +67,11 @@ export default class HTTPTransport {
 
       if (method === Method.GET || !data) {
         xhr.send();
-      } else {
+      } else if (data instanceof FormData) {
         xhr.send(data);
+      } else {
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
       }
     });
   };

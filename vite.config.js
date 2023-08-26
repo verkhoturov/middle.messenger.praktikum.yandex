@@ -1,6 +1,6 @@
-import {resolve} from 'path'
-import { defineConfig } from 'vite';
-import Handlebars from 'handlebars'
+import { resolve } from 'path';
+import { defineConfig, loadEnv } from 'vite';
+import Handlebars from 'handlebars';
 
 function handlebarsPrecompile() {
     return {
@@ -24,15 +24,21 @@ function handlebarsPrecompile() {
     }
 }
 
-export default defineConfig({
-    root: resolve(__dirname, 'src'),
-    build: {
-        outDir: resolve(__dirname, 'dist')
-    },
-    plugins: [handlebarsPrecompile()],
-    resolve: {
-        alias: {
-            handlebars: "handlebars/runtime"
-        }
-    },
-})
+export default ({ mode }) => {
+    process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+    
+    return defineConfig({
+        root: resolve(__dirname, 'src'),
+        build: {
+            outDir: resolve(__dirname, 'dist')
+        },
+        plugins: [handlebarsPrecompile()],
+        resolve: {
+            alias: {
+                handlebars: "handlebars/runtime"
+            }
+        },
+    })
+}
+
+

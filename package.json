@@ -8,7 +8,8 @@
     "server": "node ./server.js",
     "preview": "vite preview",
     "start": "vite build && node server.js",
-    "lint": "eslint ./src/**/*.ts && stylelint ./src/**/*.scss"
+    "lint": "eslint ./src/**/*.ts && stylelint ./src/**/*.scss",
+    "eslint-fix": "eslint ./src/**/*.ts --fix"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.59.8",

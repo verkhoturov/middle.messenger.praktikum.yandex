@@ -7,6 +7,10 @@ import { Input } from "../input";
 import Block from "../../utils/block";
 import compile from "../../utils/compile";
 import { isValid } from "../../utils/validator";
+import Router from "../../utils/router";
+import { LocalStorageItem } from "../../utils/types";
+
+import AuthApi from "../../api/auth";
 
 interface LoginFormProps {}
 
@@ -50,15 +54,18 @@ export class LoginForm extends Block {
     const EnterButton = new Button({
       text: "Enter",
       events: {
-        click: (e) => {
+        click: async (e) => {
           e.preventDefault();
 
           const inputs = [LoginInput, PasswordInput];
 
           const formData: { [index: string]: any } = {};
+
           let isFormValid = true;
+
           inputs.map((input) => {
             const el = input.element as HTMLInputElement;
+
             if (!isValid(el)) {
               isFormValid = false;
               el.style.borderColor = "red";
@@ -70,9 +77,33 @@ export class LoginForm extends Block {
               }
             }
           });
+
           if (isFormValid) {
-            console.log(formData);
-            window.location.href = "/chats";
+            const auth = new AuthApi();
+
+            const res = await auth.singIn({
+              login: formData.login,
+              password: formData.password,
+            });
+
+            if (res?.status === "error") {
+              inputs.map((input) => {
+                const el = input.element as HTMLInputElement;
+                el.style.borderColor = "red";
+              });
+            }
+
+            if (res?.status === "success") {
+              const userRes = await auth.getUser();
+
+              if (userRes?.status === "success") {
+                localStorage.setItem(
+                  LocalStorageItem.USER,
+                  JSON.stringify(userRes.user)
+                );
+                Router.go("/chats");
+              }
+            }
           }
         },
       },
@@ -80,7 +111,11 @@ export class LoginForm extends Block {
 
     const RegisterButton = new Button({
       text: "Register",
-      to: "/sign-up",
+      events: {
+        click: () => {
+          Router.go("/sign-up");
+        },
+      },
     });
 
     return compile(tmpl, {

@@ -63,6 +63,7 @@ export default class Block<Props extends BlockDefaultProps = {}> {
   init() {
     this._createResources();
     this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
+    this.eventBus().emit(Block.EVENTS.FLOW_CDM);
   }
 
   _componentDidMount(props: Props) {
@@ -105,6 +106,11 @@ export default class Block<Props extends BlockDefaultProps = {}> {
 
   _render() {
     const fragment = this.render();
+
+    if (!fragment) {
+      return;
+    }
+
     const element = fragment.firstElementChild;
 
     if (!element) {
@@ -119,7 +125,7 @@ export default class Block<Props extends BlockDefaultProps = {}> {
   }
 
   // Может переопределять пользователь, необязательно трогать
-  render(): DocumentFragment {
+  render(): DocumentFragment | null {
     return new DocumentFragment();
   }
 
